@@ -3,9 +3,12 @@
 namespace App\Admin\Controllers;
 
 use App\Models\Poetry;
+use App\Models\PoetryAuthor;
+use App\Store\DmStore;
 use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
+use Encore\Admin\Layout\Content;
 use Encore\Admin\Show;
 
 class PoetryController extends AdminController
@@ -15,29 +18,53 @@ class PoetryController extends AdminController
      *
      * @var string
      */
-    protected $title = 'Poetry';
+    protected $title = '唐诗';
 
     /**
      * Make a grid builder.
      *
      * @return Grid
      */
-    protected function grid()
+    protected function grid($dynasty = DmStore::DynastyT)
     {
+        $authors = PoetryAuthor::getSelect($dynasty);
+        $dynastyMap = DmStore::DynastyMap;
+
         $grid = new Grid(new Poetry());
-        $grid->id();
-        $grid->author_id();
+        $grid->model()->where('dynasty', '=', $dynasty);
+
+        $grid->id()->sortable();
         $grid->title();
         $grid->content();
         $grid->yunlv_rule();
         $grid->author();
-        $grid->dynasty();
 
         $grid->disableExport();
-        $grid->disableRowSelector();
+        //$grid->disableRowSelector();
         $grid->expandFilter();
 
+        $grid->actions(function ($actions) {
+            $actions->disableView();
+            $actions->disableEdit();
+
+            $actions->append('<a href="/admin/poetry/'.$this->row->id.'/edit" class="grid-row-edit"><i class="fa fa-edit" ></i></a>');
+        });
+
+        $grid->filter(function($filter)use($authors){
+            $filter->disableIdFilter();
+
+            $filter->equal('author_id', 'Author')->select($authors);
+        });
+
+
         return $grid;
+    }
+
+    public function indexSong(Content $content)
+    {
+        return $content
+            ->title('宋诗')
+            ->body($this->grid(DmStore::DynastyS));
     }
 
     /**

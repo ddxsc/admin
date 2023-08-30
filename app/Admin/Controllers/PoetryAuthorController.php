@@ -26,7 +26,10 @@ class PoetryAuthorController extends AdminController
     {
         $grid = new Grid(new PoetryAuthor());
 
-
+        $grid->column('id', __('Id'));
+        $grid->column('name', __('Name'));
+        $grid->column('intro', __('Intro'));
+        $grid->column('dynasty', __('Dynasty'));
 
         return $grid;
     }
@@ -41,7 +44,10 @@ class PoetryAuthorController extends AdminController
     {
         $show = new Show(PoetryAuthor::findOrFail($id));
 
-
+        $show->field('id', __('Id'));
+        $show->field('name', __('Name'));
+        $show->field('intro', __('Intro'));
+        $show->field('dynasty', __('Dynasty'));
 
         return $show;
     }
@@ -55,7 +61,9 @@ class PoetryAuthorController extends AdminController
     {
         $form = new Form(new PoetryAuthor());
 
-
+        $form->text('name', __('Name'));
+        $form->textarea('intro', __('Intro'));
+        $form->text('dynasty', __('Dynasty'));
 
         return $form;
     }

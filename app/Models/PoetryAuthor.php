@@ -18,4 +18,11 @@ class PoetryAuthor extends Model
         'dynasty',
     ];
 
+    public static function getSelect($dynasty=''){
+        $query = self::query();
+        if ($dynasty){
+            $query = $query->where('dynasty',$dynasty);
+        }
+        return $query->get()->pluck('name','id');
+    }
 }

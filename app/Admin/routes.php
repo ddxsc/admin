@@ -13,7 +13,8 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
     //$router->resource('users', UserController::class);
-    $router->resource('poetry', PoetryController::class);
+    $router->resource('poetry', PoetryController::class, ['only' => ['index', 'edit', 'destroy', 'create', 'store','update']]);
+    $router->get('poetry/song', 'PoetryController@indexSong');
     $router->resource('poetry_author', PoetryAuthorController::class);
 
     $router->resource('poems', PoemsController::class);
